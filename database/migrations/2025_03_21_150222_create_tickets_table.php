@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // User who created the ticket
+            $table->foreignId('agent_id')->nullable()->constrained('users')->onDelete('set null'); // Assigned agent
+            $table->string('title');
+            $table->text('description');
+            $table->enum('status', ['open', 'in_progress', 'resolved', 'closed'])->default('open');
             $table->timestamps();
         });
     }
