@@ -47,7 +47,7 @@ class TicketController extends Controller
      *                     @OA\Property(property="agent_id", type="integer", example="2"),
      *                     @OA\Property(property="title", type="string", example="engine problem"),
      *                     @OA\Property(property="description", type="string", example="Lorem ipsum dolor, sit amet consectetur adipisicing elit."),
-     *                     @OA\Property(property="status", type="string", , enum={"open", "in_progress", "resolved", "closed"}, example="open")
+     *                     @OA\Property(property="status", type="string", enum={"open", "in_progress", "resolved", "closed"}, example="open")
      *                 )
      *             ),
      *             @OA\Property(property="current_page", type="integer", example=1),
@@ -94,7 +94,7 @@ class TicketController extends Controller
      *             @OA\Property(property="agent_id", type="integer", example="2"),
      *             @OA\Property(property="title", type="string", example="engine problem"),
      *             @OA\Property(property="description", type="string", example="Lorem ipsum dolor, sit amet consectetur adipisicing elit."),
-     *             @OA\Property(property="status", type="string", , enum={"open", "in_progress", "resolved", "closed"}, example="open")
+     *             @OA\Property(property="status", type="string", enum={"open", "in_progress", "resolved", "closed"}, example="open")
      *         )
      *     ),
      *     @OA\Response(

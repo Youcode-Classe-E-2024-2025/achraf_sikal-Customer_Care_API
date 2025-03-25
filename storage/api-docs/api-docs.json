@@ -58,6 +58,12 @@
                                                     },
                                                     "status": {
                                                         "type": "string",
+                                                        "enum": [
+                                                            "open",
+                                                            "in_progress",
+                                                            "resolved",
+                                                            "closed"
+                                                        ],
                                                         "example": "open"
                                                     }
                                                 },
@@ -146,6 +152,12 @@
                                     },
                                     "status": {
                                         "type": "string",
+                                        "enum": [
+                                            "open",
+                                            "in_progress",
+                                            "resolved",
+                                            "closed"
+                                        ],
                                         "example": "open"
                                     }
                                 },
