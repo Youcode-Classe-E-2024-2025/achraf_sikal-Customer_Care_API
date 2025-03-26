@@ -1,10 +1,12 @@
 <?php
 namespace App\Services;
 
+use App\Interfaces\TicketServiceInterface;
 use App\Models\Ticket;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 
-class TicketService
+class TicketService implements TicketServiceInterface
 {
     public function getTickets($perPage, $filters)
     {
@@ -20,22 +22,21 @@ class TicketService
 
         return $query->paginate($perPage);
     }
-
     public function createTicket(array $data)
     {
         $validator = Validator::make($data, [
             'user_id' => 'required|integer|exists:users,id',
+            'agent_id' => 'required|integer',
             'title' => 'required|string|max:50',
             'description' => 'required|string|max:255',
+            'status' => 'required|string|max:25',
         ]);
 
         if ($validator->fails()) {
-            return ['status' => false, 'message' => 'Validation error', 'errors' => $validator->errors()];
+            throw new ValidationException($validator);
         }
 
-        $ticket = Ticket::create($data);
-
-        return ['status' => true, 'message' => 'Ticket created successfully', 'ticket' => $ticket];
+        return Ticket::create($data);
     }
 
     public function updateTicket(Ticket $ticket, array $data)

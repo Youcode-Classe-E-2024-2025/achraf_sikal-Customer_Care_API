@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
+use App\Interfaces\TicketServiceInterface;
 
 /**
  * @OA\Schema(
@@ -24,6 +26,10 @@ use Illuminate\Support\Facades\Validator;
 
 class TicketController extends Controller
 {
+    private $ticketservice;
+    public function __construct(TicketServiceInterface $ticketservice) {
+        $this->ticketservice = $ticketservice;
+    }
     /**
      * @OA\Get(
      *     path="/api/Tickets",
@@ -69,7 +75,7 @@ class TicketController extends Controller
     public function index()
     {
         $perPage = 3;
-        $tickets = Ticket::paginate($perPage);
+        $tickets = $this->ticketservice->getTickets($perPage, ['status' => "open"]);
 
         return response()->json([
             'data' => $tickets->items(),
@@ -127,37 +133,10 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         try {
-            $validatedticket = Validator::make(
-                $request->all(),
-                [
-                    'user_id' => 'required|integer',
-                    'agent_id' => 'required|integer',
-                    'title' => 'required|string|max:50',
-                    'description' => 'required|string|max:255',
-                    'status' => 'required|string|max:25',
-                ]
-            );
-            if ($validatedticket->fails()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'validation error',
-                    'errors' => $validatedticket->errors()
-                ], 401);
-            }
-
-            $ticket = Ticket::create([
-                'user_id' => $request->user_id,
-                'agent_id' => $request->agent_id,
-                'title' => $request->title,
-                'description' => $request->description,
-                'status' => $request->status,
-            ]);
-            return response()->json([
-                'status' => true,
-                'message' => 'ticket Created Successfully',
-                'ticket' => $ticket
-            ], 200);
-
+            $ticket = $this->ticketservice->createTicket($request->all());
+            return response()->json(['status' => true, 'message' => 'Ticket created successfully', 'ticket' => $ticket],201);
+        } catch (ValidationException $e) {
+            return response()->json(['status' => false, 'message' => 'Validation error', 'errors' => $e], 400);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
