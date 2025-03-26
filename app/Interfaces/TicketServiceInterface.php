@@ -7,6 +7,7 @@ use App\Models\Ticket;
 interface TicketServiceInterface
 {
     public function getTickets($perPage, $filters);
+    public function getTicketById(Ticket $ticket);
     public function createTicket(array $data);
 
     public function updateTicket(Ticket $ticket, array $data);

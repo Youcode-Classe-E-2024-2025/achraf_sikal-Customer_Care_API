@@ -74,16 +74,9 @@ class TicketController extends Controller
      */
     public function index()
     {
-        $perPage = 3;
-        $tickets = $this->ticketservice->getTickets($perPage, ['status' => "open"]);
+        $data = $this->ticketservice->getTickets(3, ['status' => "open"]);
 
-        return response()->json([
-            'data' => $tickets->items(),
-            'current_page' => $tickets->currentPage(),
-            'total_pages' => $tickets->lastPage(),
-            'total_items' => $tickets->total(),
-            'per_page' => $tickets->perPage(),
-        ], 200);
+        return response()->json($data, 200);
     }
 
     /**
@@ -132,8 +125,8 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
+        $ticket = $this->ticketservice->createTicket($request->all());
         try {
-            $ticket = $this->ticketservice->createTicket($request->all());
             return response()->json(['status' => true, 'message' => 'Ticket created successfully', 'ticket' => $ticket],201);
         } catch (ValidationException $e) {
             return response()->json(['status' => false, 'message' => 'Validation error', 'errors' => $e], 400);
@@ -171,11 +164,8 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        return response()->json([
-            'status' => true,
-            'message' => 'Ticket retrieved successfully',
-            'ticket' => $ticket
-        ], 200);
+        $data = $this->ticketservice->getTicketById($ticket);
+        return response()->json($data, 200);
     }
 
     /**
@@ -215,12 +205,12 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket)
     {
-        $ticket->update($request->all());
-        return response()->json([
-            'status' => true,
-            'message' => 'Ticket updated successfully',
-            'ticket' => $ticket
-        ], 200);
+        $updatedticket = $this->ticketservice->updateTicket($ticket, $request->all());
+        try {
+            return response()->json($updatedticket, 200);
+        } catch (ValidationException $e) {
+            return response()->json(['status' => false, 'message' => 'Validation error', 'errors' => $e], 400);
+        }
     }
 
     /**
@@ -242,10 +232,7 @@ class TicketController extends Controller
      */
     public function destroy(Ticket $ticket)
     {
-        $ticket->delete();
-        return response()->json([
-            'status' => true,
-            'message' => 'Ticket deleted successfully'
-        ], 204);
+        $deletedticket = $this->ticketservice->deleteTicket($ticket);
+        return response()->json($deletedticket, 204);
     }
 }
