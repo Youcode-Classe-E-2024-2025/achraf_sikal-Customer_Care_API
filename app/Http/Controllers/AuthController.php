@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+    public function __construct(Request $request) {
+        print_r($request);
+    }
     /**
      * @OA\Post(
      *     path="/api/register",
@@ -130,6 +133,9 @@ class AuthController extends Controller
             "user" => $user,
             "token" => $token
         ];
+    }
+    public function ha(Request $request){
+
     }
     /**
      * @OA\Post(
