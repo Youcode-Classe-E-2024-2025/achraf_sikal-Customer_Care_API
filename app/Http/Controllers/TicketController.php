@@ -31,6 +31,82 @@ class TicketController extends Controller
         $this->ticketservice = $ticketservice;
     }
     /**
+     * @OA\Post(
+     *     path="/api/tickets/{ticket}/assign/{agent}",
+     *     summary="Assign an agent to a ticket",
+     *     tags={"Tickets"},
+     *     @OA\Parameter(
+     *         name="ticket",
+     *         in="path",
+     *         description="ID of the ticket to assign",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="agent",
+     *         in="path",
+     *         description="ID of the agent to assign",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=2)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Ticket assigned successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Ticket assigned successfully"),
+     *             @OA\Property(property="ticket", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="user_id", type="integer", example=1),
+     *                 @OA\Property(property="agent_id", type="integer", example=2),
+     *                 @OA\Property(property="status", type="string", example="open")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Validation error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Ticket or agent not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Ticket or agent not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Internal Server Error")
+     *         )
+     *     )
+     * )
+     */
+    public function assign(Ticket $ticket, $agent)
+    {
+        try {
+            $ticket = $this->ticketservice->assignAgent($ticket, $agent);
+            return response()->json([
+                'status' => true,
+                'message' => 'Ticket assigned successfully',
+                'ticket' => $ticket
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+    
+    /**
      * @OA\Get(
      *     path="/api/Tickets",
      *     summary="Get paginated list of Tickets",

@@ -11,6 +11,10 @@ class AuthController extends Controller
     public function __construct(Request $request) {
         print_r($request);
     }
+    public function __invoke()
+    {
+        return response()->json(['message' => 'AuthController invoked']);
+    }
     /**
      * @OA\Post(
      *     path="/api/register",
