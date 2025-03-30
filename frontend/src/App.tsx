@@ -1,15 +1,9 @@
 import './App.css'
+import TicketManager from "./TicketManager";
+
 
 function App() {
-
-
-  return (
-    <>
-       <h1 className="text-3xl font-serif font-bold underline">
-      Hello world!
-    </h1>
-    </>
-  )
+    return <div><TicketManager/></div>;
 }
 
-export default App
+export default App;
