@@ -51,3 +51,13 @@ php artisan migrate
 ```sh
 php artisan serve
 ```
+### install react Dependencies
+```sh
+cd frontend
+npm install
+```
+
+### Start the react Development Server
+```sh
+npm run dev
+```
